@@ -1,0 +1,9 @@
+begin
+ //  n:=2;
+   if n>0
+then
+{zhushi
+  cds
+sss}
+   n:=2*(n+1)/13;
+end #
