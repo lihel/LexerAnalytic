@@ -1,6 +1,7 @@
 package mypackage;
 
 import java.io.*;
+import java.util.*;
 
 public class Analyse {
     private static String fileString;
@@ -32,8 +33,11 @@ public class Analyse {
             } else if (s.indexOf("}") != -1) {
                 System.out.println(s);
                 flag = 0;
-            } else
+            } else {
                 sb.append(s);
+                sb.append('\n');
+            }
+
         }
         bReader.close();
         fileString = sb.toString();
@@ -59,7 +63,7 @@ public class Analyse {
             p--;
             number = 10;//单词
             String newStr = new String(myword);
-
+            newStr = newStr.trim();
             for (int i = 0; i < 6; i++) {
                 if (newStr.equals(wordtable[i])) {
                     number = i + 1;
@@ -149,31 +153,102 @@ public class Analyse {
                     number = 0;
                     myword[0] = ch;
                     break;
+                case '\n':
+                    number = -2;
+                    break;
                 default:
                     number = -1;
             }
+
     }
 
     public static void main(String[] args) throws IOException {
         Analyse word = new Analyse();
         word.dofile();
+        int row = 1;
+        File txt = new File("Done.txt");
+        if (!txt.exists()) {
+            txt.createNewFile();
+        }
+
         do {
             scaner();
             switch (number) {
                 case 11:
-                    System.out.print("{" + number + ",");
+                    System.out.print("(" + number + ",");
                     System.out.print(sum);
-                    System.out.println("}");
+                    System.out.println(")");
+                    try {
+
+                        FileWriter fileWritter = new FileWriter(txt.getName(), true);
+                        fileWritter.write("种别码:" + number + "   描述:无符号数字   " + sum + "\n");
+                        fileWritter.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case -1:
-                    System.out.println("error!");
+                    System.out.println("Error in row " + row);
+                    break;
+                case -2:
+                    row = ++row;
                     break;
                 default:
-                    System.out.print("{" + number + ",");
-                    String str = new String(myword);
-                    System.out.print(str.trim());
-                    System.out.println("}");
+                    if (1 <= number && number <= 6) {
+                        System.out.print("(" + number + ",");
+                        String begin = new String(myword);
+                        System.out.print(begin.trim());
+                        System.out.println(")");
+                        try {
+                            FileWriter fileWritter = new FileWriter(txt.getName(), true);
+                            fileWritter.write("种别码:" + number + "   描述:关键字   " + begin.trim() + "\n");
+                            fileWritter.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+
+                    } else if (26 <= number && number <= 28) {
+                        System.out.print("(" + number + ",");
+                        String sp = new String(myword);
+                        System.out.print(sp.trim());
+                        System.out.println(")");
+                        try {
+                            FileWriter fileWritter = new FileWriter(txt.getName(), true);
+                            fileWritter.write("种别码:" + number + "   描述:分隔符   " + sp.trim() + "\n");
+                            fileWritter.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (13 <= number && number <= 16) {
+                        System.out.print("(" + number + ",");
+                        String sp = new String(myword);
+                        System.out.print(sp.trim());
+                        System.out.println(")");
+                        try {
+                            FileWriter fileWritter = new FileWriter(txt.getName(), true);
+                            fileWritter.write("种别码:" + number + "   描述:操作符   " + sp.trim() + "\n");
+                            fileWritter.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.print("(" + number + ",");
+                        String str = new String(myword);
+                        System.out.print(str.trim());
+                        System.out.println(")");
+                        try {
+                            FileWriter fileWritter = new FileWriter(txt.getName(), true);
+                            fileWritter.write("种别码:" + number + "   描述:字符   " + str.trim() + "\n");
+                            fileWritter.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
             }
+
         } while (number != 0);
     }
 }
