@@ -1,6 +1,6 @@
-begin
+begin@
 //p=1;
-   n:=2;
+   n:=2;!!
    if n>0
  then
 {zhushi
